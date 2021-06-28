@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:here4u/ui/home/home_screen.dart';
+import 'package:here4u/navigator.dart';
+import 'package:here4u/ui/widgets/imagebackground.dart';
+import 'package:here4u/ui/widgets/imagebackgroundwothfilter.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splash_screen';
@@ -12,13 +14,12 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Future<Timer> LoadTimer() async {
-    return new Timer(Duration(seconds: 2), onDoneLoading);
+    return new Timer(Duration(seconds: 3), onDoneLoading);
   }
 
   Future onDoneLoading() async {
-    Navigator.pushNamed(context, HomeScreen.id);
+    Navigator.pushNamed(context, NavigationBar.id);
   }
-
 
   @override
   void initState() {
@@ -26,10 +27,32 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     LoadTimer();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("Hello"),
+      body: logoScreen(),
     );
   }
+
+  //----------------------------Widget Tree--------------------------------
+  Widget logoScreen() {
+    return Column(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.width * 0.1,
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              ImageBackgroundWithFilter(
+                  imageAsset: 'assets/ui/splash/people.jpg'),
+              ImageBackground(imageAsset: 'assets/ui/splash/logo.png'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+//
 }
