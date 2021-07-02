@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:here4u/navigator.dart';
+import 'package:here4u/ui/signin/signin.dart';
 import 'package:here4u/ui/widgets/imagebackground.dart';
 import 'package:here4u/ui/widgets/imagebackgroundwothfilter.dart';
 
@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future onDoneLoading() async {
-    Navigator.pushNamed(context, NavigationBar.id);
+    Navigator.pushNamed(context, SignIn.id);
   }
 
   @override
@@ -45,9 +45,9 @@ class _SplashScreenState extends State<SplashScreen> {
         Expanded(
           child: Stack(
             children: [
+              ImageBackground(imageAsset: 'assets/ui/splash/logo.png'),
               ImageBackgroundWithFilter(
                   imageAsset: 'assets/ui/splash/people.jpg'),
-              ImageBackground(imageAsset: 'assets/ui/splash/logo.png'),
             ],
           ),
         ),

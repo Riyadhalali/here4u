@@ -14,10 +14,10 @@ class _ImageBackgroundState extends State<ImageBackground> {
       child: Container(
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.2,
         decoration: BoxDecoration(
           //   borderRadius: BorderRadius.circular(35.0),
-          color: Colors.transparent,
+          // color: Colors.transparent,
           image: DecorationImage(
               image: AssetImage(widget.imageAsset), fit: BoxFit.cover),
         ),
