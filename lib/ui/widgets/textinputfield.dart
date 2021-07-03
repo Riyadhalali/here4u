@@ -6,7 +6,7 @@ class TextInputField extends StatelessWidget {
   final String error_msg;
   final Icon? icon_widget; // if we don't need to be required
   final bool show_password;
-  Function? FunctionToDo;
+  Function? FunctionToDo; // to make sure that is not null value
 
   TextInputField(
       {required this.hint_text,
@@ -14,7 +14,7 @@ class TextInputField extends StatelessWidget {
       required this.error_msg,
       this.icon_widget,
       required this.show_password,
-      @required this.FunctionToDo});
+      this.FunctionToDo});
 
   @override
   Widget build(BuildContext context) {

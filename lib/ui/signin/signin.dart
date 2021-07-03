@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:here4u/navigator.dart';
+import 'package:here4u/services/sharedpreferences.dart';
 import 'package:here4u/ui/register/register_screen.dart';
 import 'package:here4u/ui/widgets/textinputfield.dart';
 import 'package:here4u/ui/widgets/textinputfieldwithicon.dart';
@@ -27,6 +28,29 @@ class _SignInState extends State<SignIn> {
   bool validatePhone = false;
   bool validatePassword = false;
   bool _isHidden = false;
+
+  SharedPref sharedPref = new SharedPref();
+  //------------------------------Functions-------------------------------------
+  //-> Loading User Data if he is already signed in to the program
+  Future loadUserDataLogin() async {
+    phone_data = await sharedPref.LoadData("phone");
+    password_data = await sharedPref.LoadData('password');
+    if (phone_data != null && password_data != null) {
+      setState(() {
+        _phonecontroller.text = phone_data;
+        _passwordcontroller.text = password_data;
+      });
+    }
+  }
+
+//******************************************************************************
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadUserDataLogin();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,6 +242,9 @@ class _SignInState extends State<SignIn> {
     if (validatePhone || validatePassword) {
       return;
     }
+
+    sharedPref.setData('phone', _phonecontroller.text);
+    sharedPref.setData('password', _passwordcontroller.text);
     // show a snackbar message
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(

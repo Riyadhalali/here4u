@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:here4u/ui/signin/signin.dart';
 import 'package:here4u/ui/widgets/textinputfield.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _phoneController = TextEditingController();
 
   String dropDownMenu =
-      "male"; // very important or we will get a null message when fetching api services
+      "ذكر"; // very important or we will get a null message when fetching api services
   bool _saving = false;
 
   bool _validateUsername = false;
@@ -71,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
       child: RaisedButton(
         color: Color(0xFF8949d8),
         child: Text(
-          "register",
+          "تسجيل",
           style: TextStyle(fontSize: 20.0, color: Colors.white),
         ),
         shape: RoundedRectangleBorder(
@@ -117,8 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
               duration: Duration(seconds: 3),
             ),
           );
-
-          //-> save
+          Navigator.pushNamed(context, SignIn.id);
         },
       ),
     );
@@ -142,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 2.0,
             ),
             Text(
-              "register",
+              "تسجيل",
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -152,67 +152,47 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 4.0,
             ),
             TextInputField(
-              hint_text: "username",
+              hint_text: "اسم المستخدم",
               controller_text: _usernameController,
               show_password: false,
-              error_msg: _validateUsername ? "valuecannotbeempty" : " ",
+              error_msg: _validateUsername ? "يرجى تعبئة الحقل" : " ",
             ),
             SizedBox(
               height: 5.0,
             ),
             TextInputField(
-              hint_text: "password",
+              hint_text: "كلمة المرور",
               controller_text: _passwordController,
               show_password: true, // hide password for the user
-              error_msg: _validatePassword ? "valuecannotbeempty" : " ",
+              error_msg: _validatePassword ? "يرجى تعبئة الحقل" : " ",
             ),
             SizedBox(
               height: 5.0,
             ),
             TextInputField(
-              hint_text: "phone",
+              hint_text: "رقم الهاتف",
               controller_text: _phoneController,
               show_password: false,
-              error_msg: _validatePhone ? "valuecannotbeempty" : "  ",
+              error_msg: _validatePhone ? "يرجى تعبئة الحقل" : "  ",
             ),
             SizedBox(
               height: 5.0,
             ),
             Row(
               children: [
-                Container(
-                  padding: EdgeInsets.only(left: 50.0, right: 50.0),
-                  child: Text(
-                    "gender",
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black38),
-                  ),
-                ),
+                // Container(
+                //   padding: EdgeInsets.only(left: 50.0, right: 50.0),
+                //   child: Text(
+                //     "ذكر",
+                //     style: TextStyle(
+                //         fontSize: 20.0,
+                //         fontWeight: FontWeight.bold,
+                //         color: Colors.black38),
+                //   ),
+                // ),
                 SizedBox(
                   width: 20.0,
                 ),
-                new DropdownButton<String>(
-                  value: "male",
-                  items: <String>[
-                    'male',
-                    'female',
-                  ].map((String value) {
-                    return new DropdownMenuItem<String>(
-                      value: value,
-                      child: new Text(
-                        value,
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                    );
-                  }).toList(),
-                  // onChanged: (String value1) {
-                  //   setState(() {
-                  //     dropDownMenu = value1;
-                  //   });
-                  // },
-                )
               ],
             ),
             SizedBox(

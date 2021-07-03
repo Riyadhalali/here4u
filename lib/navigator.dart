@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:here4u/ui/home/home_screen.dart';
 
 class NavigationBar extends StatefulWidget {
   static const String id = 'navigation_bar';
@@ -20,7 +21,7 @@ class _NavigationBarState extends State<NavigationBar> {
 
   //---------------------------List of Pages------------------------------------
   final List<Widget> _pages = [
-    //HomePage(),
+    HomeScreen(),
     //SeekedServices(),
     // MyAppointment(),
   ];
@@ -53,9 +54,13 @@ class _NavigationBarState extends State<NavigationBar> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed, // to make it unsizable
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
-          BottomNavigationBarItem(icon: Icon(Icons.car_rental), label: "home"),
-          BottomNavigationBarItem(icon: Icon(Icons.date_range), label: "home"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.car_rental), label: "تبرعات"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.date_range), label: "الحقيبة"),
+          BottomNavigationBarItem(icon: Icon(Icons.date_range), label: "حسابي"),
+          BottomNavigationBarItem(icon: Icon(Icons.date_range), label: "تواصل"),
         ],
         currentIndex: selectedPage,
         showUnselectedLabels: true,
