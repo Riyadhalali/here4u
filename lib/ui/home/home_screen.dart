@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:here4u/ui/home/components/drawer.dart';
 import 'package:here4u/ui/home/components/imageslider.dart';
 
+import 'components/post.dart';
+
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
 
@@ -30,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 10,
         ),
         ImageSlider(),
+        Divider(),
+        PostPage(),
       ],
     );
   }
