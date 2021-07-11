@@ -51,6 +51,7 @@ class _NavigationBarState extends State<NavigationBar> {
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
+      key: _drawerKey,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed, // to make it unsizable
         items: <BottomNavigationBarItem>[

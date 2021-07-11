@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:here4u/ui/home/components/categories.dart';
+import 'package:here4u/ui/home/components/drawer.dart';
 import 'package:here4u/ui/home/components/imageslider.dart';
-import 'package:here4u/ui/home/components/offers.dart';
-
-import 'components/volontaries.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -13,6 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Here4U"),
       ),
       body: SingleChildScrollView(child: columnElements()),
+      drawer: DrawePage(),
     );
   }
 
@@ -31,15 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 10,
         ),
         ImageSlider(),
-        OffersHeader(),
-        SizedBox(
-          height: 10,
-        ),
-        Voluntaries(),
-        SizedBox(
-          height: 10,
-        ),
-        Categories(),
       ],
     );
   }

@@ -21,7 +21,7 @@ class _ImageSliderState extends State<ImageSlider> {
       child: CarouselSlider(
         options: CarouselOptions(
           initialPage: 0,
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.3,
           enlargeCenterPage: false,
           autoPlay: true,
           reverse: false,
