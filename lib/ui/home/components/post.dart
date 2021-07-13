@@ -1,13 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:here4u/models/post_model.dart';
+import 'package:here4u/providers/post_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PostPage extends StatelessWidget {
   DateTime now = DateTime.now();
   late String formattedDate;
+  final String id;
+
+  PostPage({required this.id});
 
   @override
   Widget build(BuildContext context) {
+    final postProvider = Provider.of<PostProvider>(context);
+    final postModel = Provider.of<PostModel>(context);
     return Container(
       width: MediaQuery.of(context).size.width * 1,
       height: MediaQuery.of(context).size.height * 0.35,
@@ -32,7 +40,7 @@ class PostPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "إعلان تطوعي ",
+              postModel.postText.toString(),
               style: TextStyle(fontSize: 20.0),
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:here4u/providers/post_provider.dart';
 import 'package:here4u/ui/home/components/drawer.dart';
 import 'package:here4u/ui/home/components/imageslider.dart';
+import 'package:provider/provider.dart';
 
 import 'components/post.dart';
 
@@ -19,13 +21,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text("Here4U"),
       ),
-      body: SingleChildScrollView(child: columnElements()),
+      body: SingleChildScrollView(child: columnElements(context)),
       drawer: DrawePage(),
     );
   }
 
   //-------------------------------Widget Tree----------------------------------
-  Widget columnElements() {
+  Widget columnElements(BuildContext context) {
+    final postProvider = Provider.of<PostProvider>(context);
     return Column(
       children: [
         SizedBox(
@@ -33,7 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         ImageSlider(),
         Divider(),
-        PostPage(),
+        ListView.builder(
+          itemCount: postProvider.getPosts.length,
+          itemBuilder: (BuildContext context, index) {
+            return ChangeNotifierProvider.value(
+              value: postProvider.getPosts.values.toList()[index],
+              child: PostPage(
+                id: postProvider.getPosts.values.toList()[index].id,
+              ),
+            );
+          },
+        ),
       ],
     );
   }

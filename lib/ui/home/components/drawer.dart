@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:here4u/ui/addpost/addpost.dart';
 
 class DrawePage extends StatelessWidget {
   const DrawePage({Key? key}) : super(key: key);
@@ -27,6 +28,13 @@ class DrawePage extends StatelessWidget {
             ),
             onTap: () {},
           ),
+          ListTile(
+            leading: Icon(Icons.add),
+            title: Text('إضافة منشور'),
+            onTap: () {
+              Navigator.pushNamed(context, AddPost.id);
+            },
+          )
         ],
       ),
     );
