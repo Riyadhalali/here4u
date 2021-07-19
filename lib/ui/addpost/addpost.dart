@@ -132,7 +132,7 @@ class _AddPostState extends State<AddPost> {
           onPressed: () async {
             if (_postBodyController.text.isNotEmpty && imageFile != null) {
               postProvider.addPost(
-                  '4', _postBodyController.text, imageFile!, DateTime.now());
+                  '5', _postBodyController.text, imageFile!, DateTime.now());
               //load timer for 3 seconds when it is done please go to screen
               Timer timer = Timer(Duration(seconds: 3), () {
                 Navigator.pushNamed(context, HomeScreen.id);
