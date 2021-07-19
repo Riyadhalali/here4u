@@ -27,6 +27,7 @@ class DB {
   Future<bool> insertData(DataBaseModel data) async {
     final Database db = await initDB();
     db.insert("MYTable", data.toMap());
+    print(await db.query("MYTABLE")); // print all data in the table
     return true;
   }
 

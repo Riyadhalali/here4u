@@ -45,11 +45,12 @@ class PostPage extends StatelessWidget {
             ),
           ),
           Container(
+            color: Colors.amber,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.15,
             child: Image.file(
               postModel.imagePath,
-              fit: BoxFit.contain,
+              fit: BoxFit.fill,
             ),
           ),
           Divider(
