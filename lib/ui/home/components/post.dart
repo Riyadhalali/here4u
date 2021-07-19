@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PostPage extends StatelessWidget {
-  DateTime now = DateTime.now();
-  late String formattedDate;
+  final DateTime now = DateTime.now();
+  late final String formattedDate;
   final String id;
 
   PostPage({required this.id});
@@ -34,7 +34,7 @@ class PostPage extends StatelessWidget {
           ),
           Row(
             children: [
-              Text(DateFormat('yyyy-MM-dd – kk:mm').format(now)),
+              Text(DateFormat('yyyy-MM-dd – kk:mm').format(postModel.postDate)),
             ],
           ),
           Padding(
@@ -47,8 +47,8 @@ class PostPage extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.15,
-            child: Image.asset(
-              "assets/logo/logo.png",
+            child: Image.file(
+              postModel.imagePath,
               fit: BoxFit.contain,
             ),
           ),

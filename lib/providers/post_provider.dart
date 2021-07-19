@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:here4u/models/post_model.dart';
 
@@ -9,8 +11,7 @@ class PostProvider with ChangeNotifier {
   }
 
   //-----------------------------Add Post---------------------------------------
-  void addPost(
-      String id, String postText, String imagePath, DateTime postDate) {
+  void addPost(String id, String postText, File imagePath, DateTime postDate) {
     if (_postItems.containsKey(id)) {
       _postItems.update(
           id,
@@ -18,7 +19,7 @@ class PostProvider with ChangeNotifier {
               existingPost.imagePath, existingPost.postDate, existingPost.id));
     } else {
       _postItems.putIfAbsent(
-          id, () => PostModel("hello", "/imagepath", DateTime.now(), "1"));
+          id, () => PostModel(postText, imagePath, postDate, id));
     }
     notifyListeners();
   }
