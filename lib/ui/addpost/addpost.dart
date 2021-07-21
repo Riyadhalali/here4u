@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:here4u/models/database_model.dart';
 import 'package:here4u/providers/post_provider.dart';
 import 'package:here4u/ui/home/home_screen.dart';
 import 'package:here4u/ui/widgets/mywidgets.dart';
 import 'package:here4u/utils/database.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class AddPost extends StatefulWidget {
@@ -25,31 +23,29 @@ class _AddPostState extends State<AddPost> {
   final ImagePicker _picker = new ImagePicker();
   File? imageFile; // the question mark means it could be null
   late DB db;
-  List<DataBaseModel> datas = [];
-  bool fetching = true;
-//-> init database and load data
+  String? base64image;
 
-  void getData() async {
-    datas = await db.getData();
-    setState(() {
-      fetching = false;
-    });
-  }
+  bool fetching = true;
+  String? imageFilePath;
 
   //-> get image from gallery
   Future getImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
     setState(() {
       //-> if the user didn't select any image
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);
+        imageFilePath = pickedFile.path;
+
         print(imageFile);
+        print(imageFilePath);
       }
     });
   }
 
   //------------------------
-  void showProcessingDialog(String text,BuildContext context) async {
+  void showProcessingDialog(String text, BuildContext context) async {
     return showDialog(
         barrierDismissible: true,
         context: context,
@@ -78,8 +74,8 @@ class _AddPostState extends State<AddPost> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    db = DB();
-    getData();
+    // db = DB();
+    // getData();
   }
 
   @override
@@ -153,20 +149,24 @@ class _AddPostState extends State<AddPost> {
         ElevatedButton(
           onPressed: () async {
             if (_postBodyController.text.isNotEmpty && imageFile != null) {
-              postProvider.addPost(datas.length.toString(),
-                  _postBodyController.text, imageFile!, DateTime.now());
+              postProvider.addPost(
+                  postProvider.items.length + 1,
+                  _postBodyController.text,
+                  imageFilePath.toString(),
+                  DateTime.now());
+              print(imageFile);
               //-> insert data to sql database
-              db.insertData(DataBaseModel(
-                  textPost: _postBodyController.text,
-                  date: DateTime.now().toString(),
-                  imagePath: imageFile.toString()));
+              // db.insertData(DataBaseModel(
+              //     textPost: _postBodyController.text,
+              //     date: DateTime.now().toString(),
+              //     imagePath: imageFile.toString()));
 
               //load timer for 3 seconds when it is done please go to screen
               Timer timer = Timer(Duration(seconds: 3), () {
                 Navigator.pushNamed(context, HomeScreen.id);
                 //  Navigator.of(context, rootNavigator: true).pop();
               });
-              showProcessingDialog('جاري النشر ...',context);
+              showProcessingDialog('جاري النشر ...', context);
             } else {
               MyWidgets myWidgets = new MyWidgets();
               myWidgets.displaySnackMessage('يرجى تعبئة البيانات', context);

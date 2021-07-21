@@ -1,55 +1,41 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:here4u/models/database_model.dart';
-import 'package:here4u/models/post_model.dart';
 import 'package:here4u/utils/database.dart';
 
 class PostProvider with ChangeNotifier {
-  static Map<String, PostModel> _postItems = {};
-  late DB db = DB();
+  // static Map<String, PostModel> _postItems = {};
 
-  late List<DataBaseModel> datas;
-  //-----------------------Get Posts--------------------------------------------
-  Map<String, PostModel> get getPosts {
-    return {..._postItems};
+  final DB db = DB();
+
+  List<DataBaseModel> _items = [];
+  List<DataBaseModel> get items => [..._items];
+
+  PostProvider() {
+    getData();
   }
 
-  Future<List<DataBaseModel>> getData1() async {
-    datas = await db.getData();
+  //--------------------------------Add post------------------------------------
+  void addPost(int id, String postText, String imagePath, DateTime postDate) {
+    final newPost = DataBaseModel(
+        textPost: postText,
+        date: postDate.toString(),
+        imagePath: imagePath.toString());
+    _items.add(newPost);
     notifyListeners();
-    return datas;
+    db.insertData(DataBaseModel(
+        textPost: postText,
+        date: postDate.toString(),
+        imagePath: imagePath.toString()));
   }
 
-  //-----------------------------Add Post---------------------------------------
-  void addPost(String id, String postText, File imagePath, DateTime postDate) {
-    if (_postItems.containsKey(id)) {
-      _postItems.update(
-          id,
-          (existingPost) => PostModel(existingPost.postText,
-              existingPost.imagePath, existingPost.postDate, existingPost.id));
-    } else {
-      _postItems.putIfAbsent(
-          id, () => PostModel(postText, imagePath, postDate, id));
-    }
+  Future<void> getData() async {
+    final dataList = await db.getData();
+    _items = dataList
+        .map((item) => DataBaseModel(
+            textPost: item['textPost'],
+            date: item['date'],
+            imagePath: item['imagePath']))
+        .toList();
     notifyListeners();
   }
-//------------------------------------------------------------------------------
-//   void addPost(String id, String postText, File imagePath, DateTime postDate) {
-//     // if (_postItems.containsKey(id)) {
-//     //   _postItems.update(
-//     //       id,
-//     //       (existingPost) => PostModel(existingPost.postText,
-//     //           existingPost.imagePath, existingPost.postDate, existingPost.id));
-//     // } else {
-//     //   _postItems.putIfAbsent(
-//     //       id, () => PostModel(postText, imagePath, postDate, id));
-//     // }
-//     datas.add(DataBaseModel(
-//         textPost: postText,
-//         date: postDate.toString(),
-//         imagePath: imagePath.toString()));
-//     notifyListeners();
-//   }
-//-----------------------------------------------------------
 } //  end class

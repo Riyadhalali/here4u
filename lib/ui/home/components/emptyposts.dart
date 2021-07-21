@@ -12,6 +12,7 @@ class EmptyPosts extends StatelessWidget {
         child: Text(
           'لا يوجد نتائج .... ',
           style: TextStyle(fontSize: 25.0),
+          textAlign: TextAlign.center,
         ),
       ),
     );

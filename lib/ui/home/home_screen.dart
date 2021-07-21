@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:here4u/providers/post_provider.dart';
 import 'package:here4u/ui/home/components/drawer.dart';
+import 'package:here4u/ui/home/components/emptyposts.dart';
 import 'package:here4u/ui/home/components/imageslider.dart';
 import 'package:here4u/ui/home/components/post.dart';
+import 'package:here4u/utils/database.dart';
 import 'package:provider/provider.dart';
-
-import 'components/emptyposts.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
 
   bool fetching = true;
+  DB db = DB();
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   //-------------------------------Widget Tree----------------------------------
   Widget columnElements(BuildContext context) {
-    final postProvider = Provider.of<PostProvider>(context);
+    var postProvider = Provider.of<PostProvider>(context);
     return Column(
       children: [
         SizedBox(
@@ -48,18 +49,22 @@ class _HomeScreenState extends State<HomeScreen> {
         ImageSlider(),
         Divider(),
         Expanded(
-          child: postProvider.getPosts.isEmpty
+          child: Provider.of<PostProvider>(context).items.length == 0
               ? EmptyPosts()
-              : ListView.builder(
-                  itemCount: postProvider.getPosts.length,
-                  itemBuilder: (BuildContext context, index) {
-                    return ChangeNotifierProvider.value(
-                      value: postProvider.getPosts.values.toList()[index],
-                      child: PostPage(
-                        id: postProvider.getPosts.values.toList()[index].id,
-                      ),
-                    );
-                  },
+              : Consumer<PostProvider>(
+                  builder: (context, postProvider, child) => ListView.builder(
+                    itemCount: postProvider.items.length,
+                    itemBuilder: (context, index) {
+                      return PostPage(
+                        textPost: postProvider.items[index].textPost,
+                        datePost: postProvider.items[index].date,
+                        // imagePath:
+                        //     '/data/user/0/com.example.here4u/cache/image_picker4817170398834859554.jpg',
+                        imagePath:
+                            postProvider.items[index].imagePath.toString(),
+                      );
+                    },
+                  ),
                 ),
         )
       ],

@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PostProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => PostProvider()),
+      ],
       child: MaterialApp(
         localizationsDelegates: [
           GlobalCupertinoLocalizations.delegate,

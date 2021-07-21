@@ -1,10 +1,16 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:here4u/models/database_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DB {
+class DB with ChangeNotifier {
+  //-> this will run first
+  DB() {
+    initDB();
+  }
+
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
@@ -21,6 +27,7 @@ class DB {
       },
       version: 1,
     );
+    notifyListeners();
   }
 
   //------------------------------INSERT DATA-----------------------------------
@@ -32,10 +39,15 @@ class DB {
   }
 
 //------------------------------Get Data from SQL-------------------------------
-  Future<List<DataBaseModel>> getData() async {
+//   Future<List<DataBaseModel>> getData() async {
+//     final Database db = await initDB();
+//     final List<Map<String, Object?>> datas = await db.query("MYTABLE");
+//     return datas.map((e) => DataBaseModel.fromMap(e)).toList();
+//   }
+  //---------------------------Get Data From SQL--------------------------------
+  Future<List<Map<String, dynamic>>> getData() async {
     final Database db = await initDB();
-    final List<Map<String, Object?>> datas = await db.query("MYTABLE");
-    return datas.map((e) => DataBaseModel.fromMap(e)).toList();
+    return await db.query("MYTABLE");
   }
 
   //--------------------------update Data---------------------------------------
