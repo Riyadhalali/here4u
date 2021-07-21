@@ -1,27 +1,41 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:here4u/models/post_model.dart';
+import 'package:here4u/models/database_model.dart';
+import 'package:here4u/utils/database.dart';
 
 class PostProvider with ChangeNotifier {
-  Map<String, PostModel> _postItems = {};
-  //-----------------------Get Posts--------------------------------------------
-  Map<String, PostModel> get getPosts {
-    return {..._postItems};
+  // static Map<String, PostModel> _postItems = {};
+
+  final DB db = DB();
+
+  List<DataBaseModel> _items = [];
+  List<DataBaseModel> get items => [..._items];
+
+  PostProvider() {
+    getData();
   }
 
-  //-----------------------------Add Post---------------------------------------
-  void addPost(String id, String postText, File imagePath, DateTime postDate) {
-    if (_postItems.containsKey(id)) {
-      _postItems.update(
-          id,
-          (existingPost) => PostModel(existingPost.postText,
-              existingPost.imagePath, existingPost.postDate, existingPost.id));
-    } else {
-      _postItems.putIfAbsent(
-          id, () => PostModel(postText, imagePath, postDate, id));
-    }
+  //--------------------------------Add post------------------------------------
+  void addPost(int id, String postText, String imagePath, DateTime postDate) {
+    final newPost = DataBaseModel(
+        textPost: postText,
+        date: postDate.toString(),
+        imagePath: imagePath.toString());
+    _items.add(newPost);
+    notifyListeners();
+    db.insertData(DataBaseModel(
+        textPost: postText,
+        date: postDate.toString(),
+        imagePath: imagePath.toString()));
+  }
+
+  Future<void> getData() async {
+    final dataList = await db.getData();
+    _items = dataList
+        .map((item) => DataBaseModel(
+            textPost: item['textPost'],
+            date: item['date'],
+            imagePath: item['imagePath']))
+        .toList();
     notifyListeners();
   }
-//-----------------------------------------------------------
 } //  end class
