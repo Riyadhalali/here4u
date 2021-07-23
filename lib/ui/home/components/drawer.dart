@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:here4u/emergency/emergency.dart';
 import 'package:here4u/ui/addpost/addpost.dart';
 
 class DrawePage extends StatelessWidget {
@@ -26,7 +27,9 @@ class DrawePage extends StatelessWidget {
             title: Text(
               'قسم الإسعاف',
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, EmergencyPage.id);
+            },
           ),
           ListTile(
             leading: Icon(Icons.add),
