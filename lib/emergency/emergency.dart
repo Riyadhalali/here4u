@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+const LatLng SOURCE_LOCATION = LatLng(42.7477863, -71.1699932);
+const LatLng DEST_LOCATION = LatLng(35.11274331472979, 36.75788764136045);
 
 class EmergencyPage extends StatefulWidget {
   const EmergencyPage({Key? key}) : super(key: key);
@@ -12,16 +16,20 @@ class EmergencyPage extends StatefulWidget {
   _EmergencyPageState createState() => _EmergencyPageState();
 }
 
-class _EmergencyPageState extends State<EmergencyPage>
-    with AutomaticKeepAliveClientMixin {
+class _EmergencyPageState extends State<EmergencyPage> {
   Completer<GoogleMapController> _controller = Completer();
   double? lat;
   double? long;
+  Set<Marker> _markers = Set<Marker>();
+  Set<Polyline> _polylines = Set<Polyline>();
+  List<LatLng> polylineCoordinates = [];
+  late PolylinePoints polylinePoints;
 
-  List<Marker> _markers = <Marker>[];
-  @override
-  bool get wantKeepAlive => true;
+  late LatLng currentLocation;
+  late LatLng destinationLocation;
+
   //-> get the location of this device
+  //-----------------------------------------Get Location-----------------------
   void getLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -30,20 +38,73 @@ class _EmergencyPageState extends State<EmergencyPage>
     setState(() {
       lat = latitudeData;
       long = longitudeData;
+      currentLocation = LatLng(position.latitude, position.longitude);
+      destinationLocation =
+          LatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude);
     });
     print(lat);
     print(long);
 
-    _markers.add(Marker(
-        markerId: MarkerId('Location'),
-        position: LatLng(latitudeData, longitudeData),
-        infoWindow: InfoWindow(title: 'Location')));
+    // _markers.add(Marker(
+    //     markerId: MarkerId('Location'),
+    //     position: LatLng(latitudeData, longitudeData),
+    //     infoWindow: InfoWindow(title: 'Location')));
+  }
+
+  // void getLocation() async {
+  //   currentLocation =
+  //       LatLng(SOURCE_LOCATION.latitude, SOURCE_LOCATION.longitude);
+  //
+  //   destinationLocation =
+  //       LatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude);
+  // }
+
+//------------------------------------------------------------------------------
+  void setPolylines() async {
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        "AIzaSyA54WuN4cuPPdhHB5hW-ibaYJGF7ZB_1mE",
+        PointLatLng(currentLocation.latitude, currentLocation.longitude),
+        PointLatLng(
+            destinationLocation.latitude, destinationLocation.longitude));
+
+    print('error message');
+    print(result.errorMessage);
+    if (result.status == 'OK') {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+
+      setState(() {
+        _polylines.add(Polyline(
+            width: 10,
+            polylineId: PolylineId('polyline'),
+            color: Colors.purple,
+            points: polylineCoordinates));
+        setState(() {});
+      });
+    }
+  }
+
+  //----------------------------Show Pins on Map-----------------------------
+  void showPinsOnMap() {
+    setState(() {
+      _markers.add(Marker(
+        markerId: MarkerId('sourcePin'),
+        position: currentLocation,
+      ));
+
+      _markers.add(Marker(
+        markerId: MarkerId('destinationPin'),
+        position: destinationLocation,
+      ));
+    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    polylinePoints = PolylinePoints();
     getLocation();
   }
 
@@ -55,16 +116,23 @@ class _EmergencyPageState extends State<EmergencyPage>
               child: CircularProgressIndicator(),
             )
           : GoogleMap(
-              mapType: MapType.hybrid,
+              mapType: MapType.normal,
               initialCameraPosition: CameraPosition(
                 target: LatLng(lat!, long!),
                 zoom: 15.0,
               ),
-              markers: Set<Marker>.of(_markers),
+              markers: _markers,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
+              polylines: _polylines,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
+                showPinsOnMap();
+                setPolylines();
+              },
+              //-> this function will print the location of taped location on the maps
+              onTap: (LatLng loc) {
+                print(loc);
               },
             ),
     );
