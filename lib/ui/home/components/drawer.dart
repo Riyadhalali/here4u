@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:here4u/emergency/emergency.dart';
 import 'package:here4u/ui/addpost/addpost.dart';
+import 'package:here4u/ui/helperkits/helperkits.dart';
+import 'package:here4u/ui/home/components/volontaries.dart';
 
 class DrawePage extends StatelessWidget {
   const DrawePage({Key? key}) : super(key: key);
@@ -23,7 +26,24 @@ class DrawePage extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.search),
+            leading: Icon(Icons.add),
+            title: Text('إضافة منشور'),
+            onTap: () {
+              Navigator.pushNamed(context, AddPost.id);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.app_registration),
+            title: Text('التسجيل على معونة'),
+            onTap: () {
+              Navigator.pushNamed(context, HelperKits.id);
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.radio_button_on,
+              color: Colors.red,
+            ),
             title: Text(
               'طلب الإسعاف',
             ),
@@ -32,12 +52,27 @@ class DrawePage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.add),
-            title: Text('إضافة منشور'),
+            leading: Icon(Icons.archive_rounded),
+            title: Text('باب التطوع'),
             onTap: () {
-              Navigator.pushNamed(context, AddPost.id);
+              Navigator.pushNamed(context, Voluntaries.id);
             },
-          )
+          ),
+          ListTile(
+            leading: Icon(Icons.help),
+            title: Text('حول'),
+            onTap: () {
+              //   Navigator.pushNamed(context, Voluntaries.id);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('خروج'),
+            onTap: () {
+              // exit out of the program
+              SystemNavigator.pop();
+            },
+          ),
         ],
       ),
     );

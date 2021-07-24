@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:here4u/ui/helperkits/helperkits.dart';
+import 'package:here4u/ui/home/components/volontaries.dart';
 import 'package:here4u/ui/home/home_screen.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -24,6 +25,7 @@ class _NavigationBarState extends State<NavigationBar> {
   final List<Widget> _pages = [
     HomeScreen(),
     HelperKits(),
+    Voluntaries(),
   ];
   //--------------------------On Tapped item-----------------------------------
   _onTapped(int index) {
@@ -59,9 +61,7 @@ class _NavigationBarState extends State<NavigationBar> {
           BottomNavigationBarItem(
               icon: Icon(Icons.car_rental), label: "معونات"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.date_range), label: "الحقيبة"),
-          BottomNavigationBarItem(icon: Icon(Icons.date_range), label: "حسابي"),
-          BottomNavigationBarItem(icon: Icon(Icons.date_range), label: "تواصل"),
+              icon: Icon(Icons.date_range), label: "التطوع"),
         ],
         currentIndex: selectedPage,
         showUnselectedLabels: true,
