@@ -35,6 +35,10 @@ dependencies:
   google_maps_flutter: ^2.0.6
   flutter_polyline_points: ^1.0.0
   http: ^0.13.3
+
+
+
+
   flutter_localizations:
     sdk: flutter
 
@@ -43,9 +47,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.9.0"
+
+flutter_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/appicon/logo.jpeg"
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -60,10 +73,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/logo/logo.png
+   - assets/logo/logo.jpeg
    - assets/ui/splash/
    - assets/ui/signin/
    - assets/ui/register/
+   - assets/ui/home/
 
 
   # fonts:

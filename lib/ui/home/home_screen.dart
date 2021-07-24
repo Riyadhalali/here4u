@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Here4U"),
+        backgroundColor: Colors.red,
+        title: Text("الهلال الأحمر العربي السوري"),
       ),
       //-> if we put an singlechildscrolview it will give us an error
       body: columnElements(context),
@@ -41,33 +42,39 @@ class _HomeScreenState extends State<HomeScreen> {
   //-------------------------------Widget Tree----------------------------------
   Widget columnElements(BuildContext context) {
     var postProvider = Provider.of<PostProvider>(context);
-    return Column(
-      children: [
-        SizedBox(
-          height: 10,
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            ImageSlider(),
+            Divider(),
+            Expanded(
+              child: Provider.of<PostProvider>(context).items.length == 0
+                  ? EmptyPosts()
+                  : Consumer<PostProvider>(
+                      builder: (context, postProvider, child) =>
+                          ListView.builder(
+                        itemCount: postProvider.items.length,
+                        itemBuilder: (context, index) {
+                          return PostPage(
+                            textPost: postProvider.items[index].textPost,
+                            datePost: postProvider.items[index].date,
+                            // imagePath:
+                            //     '/data/user/0/com.example.here4u/cache/image_picker4817170398834859554.jpg',
+                            imagePath:
+                                postProvider.items[index].imagePath.toString(),
+                          );
+                        },
+                      ),
+                    ),
+            )
+          ],
         ),
-        ImageSlider(),
-        Divider(),
-        Expanded(
-          child: Provider.of<PostProvider>(context).items.length == 0
-              ? EmptyPosts()
-              : Consumer<PostProvider>(
-                  builder: (context, postProvider, child) => ListView.builder(
-                    itemCount: postProvider.items.length,
-                    itemBuilder: (context, index) {
-                      return PostPage(
-                        textPost: postProvider.items[index].textPost,
-                        datePost: postProvider.items[index].date,
-                        // imagePath:
-                        //     '/data/user/0/com.example.here4u/cache/image_picker4817170398834859554.jpg',
-                        imagePath:
-                            postProvider.items[index].imagePath.toString(),
-                      );
-                    },
-                  ),
-                ),
-        )
-      ],
+      ),
     );
   }
 

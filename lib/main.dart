@@ -4,6 +4,7 @@ import 'package:here4u/emergency/emergency.dart';
 import 'package:here4u/navigator.dart';
 import 'package:here4u/providers/post_provider.dart';
 import 'package:here4u/ui/addpost/addpost.dart';
+import 'package:here4u/ui/helperkits/helperkits.dart';
 import 'package:here4u/ui/home/home_screen.dart';
 import 'package:here4u/ui/register/register_screen.dart';
 import 'package:here4u/ui/signin/signin.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
           RegisterPage.id: (context) => RegisterPage(),
           AddPost.id: (context) => AddPost(),
           EmergencyPage.id: (context) => EmergencyPage(),
+          HelperKits.id: (context) => HelperKits(),
         },
       ),
     );

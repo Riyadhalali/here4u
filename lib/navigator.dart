@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:here4u/ui/helperkits/helperkits.dart';
 import 'package:here4u/ui/home/home_screen.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -22,8 +23,7 @@ class _NavigationBarState extends State<NavigationBar> {
   //---------------------------List of Pages------------------------------------
   final List<Widget> _pages = [
     HomeScreen(),
-    //SeekedServices(),
-    // MyAppointment(),
+    HelperKits(),
   ];
   //--------------------------On Tapped item-----------------------------------
   _onTapped(int index) {
@@ -57,7 +57,7 @@ class _NavigationBarState extends State<NavigationBar> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.car_rental), label: "تبرعات"),
+              icon: Icon(Icons.car_rental), label: "معونات"),
           BottomNavigationBarItem(
               icon: Icon(Icons.date_range), label: "الحقيبة"),
           BottomNavigationBarItem(icon: Icon(Icons.date_range), label: "حسابي"),
@@ -66,7 +66,7 @@ class _NavigationBarState extends State<NavigationBar> {
         currentIndex: selectedPage,
         showUnselectedLabels: true,
         unselectedItemColor: Color(0xFFB1B1B1),
-        selectedItemColor: Colors.purpleAccent,
+        selectedItemColor: Colors.redAccent,
         selectedFontSize: 10.0,
         unselectedFontSize: 10.0,
         backgroundColor: Colors.white,

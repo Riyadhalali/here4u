@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Expanded(
           child: Stack(
             children: [
-              ImageBackground(imageAsset: 'assets/ui/splash/logo.png'),
+              ImageBackground(imageAsset: 'assets/logo/logo.jpeg'),
               ImageBackgroundWithFilter(
                   imageAsset: 'assets/ui/splash/people.jpg'),
             ],

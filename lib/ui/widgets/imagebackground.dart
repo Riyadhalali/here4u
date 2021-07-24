@@ -19,7 +19,7 @@ class _ImageBackgroundState extends State<ImageBackground> {
           //   borderRadius: BorderRadius.circular(35.0),
           // color: Colors.transparent,
           image: DecorationImage(
-              image: AssetImage(widget.imageAsset), fit: BoxFit.cover),
+              image: AssetImage(widget.imageAsset), fit: BoxFit.contain),
         ),
       ),
     );

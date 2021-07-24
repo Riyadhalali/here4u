@@ -8,12 +8,27 @@ class ImageSlider extends StatefulWidget {
 
 class _ImageSliderState extends State<ImageSlider> {
   int _current = 0;
+  // List imgList = [
+  //   'https://images.unsplash.com/photo-1502117859338-fd9daa518a9a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+  //   'https://images.unsplash.com/photo-1554321586-92083ba0a115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+  //   'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+  //   'https://images.unsplash.com/photo-1543922596-b3bbaba80649?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+  //   'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'
+  // ];
+
   List imgList = [
-    'https://images.unsplash.com/photo-1502117859338-fd9daa518a9a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1554321586-92083ba0a115?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1536679545597-c2e5e1946495?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1543922596-b3bbaba80649?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-    'https://images.unsplash.com/photo-1502943693086-33b5b1cfdf2f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'
+    'assets/ui/home/slide_1.jpeg',
+    'assets/ui/home/slide_2.jpeg',
+    'assets/ui/home/slide_3.jpeg',
+    'assets/ui/home/slide_4.jpeg',
+    'assets/ui/home/slide_5.jpeg',
+    'assets/ui/home/slide_6.jpeg',
+    'assets/ui/home/slide_7.jpeg',
+    'assets/ui/home/slide_8.jpeg',
+    'assets/ui/home/slide_9.jpeg',
+    'assets/ui/home/slide_10.jpeg',
+    'assets/ui/home/slide_11.jpeg',
+    'assets/ui/home/slide_12.jpeg',
   ];
   @override
   Widget build(BuildContext context) {
@@ -36,22 +51,22 @@ class _ImageSliderState extends State<ImageSlider> {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: BoxDecoration(color: Colors.amber),
-                child: Image.network(
+                decoration: BoxDecoration(color: Colors.white),
+                child: Image.asset(
                   imgUrl,
                   fit: BoxFit.fill,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
+                  // loadingBuilder: (BuildContext context, Widget child,
+                  //     ImageChunkEvent? loadingProgress) {
+                  //   if (loadingProgress == null) return child;
+                  //   return Center(
+                  //     child: CircularProgressIndicator(
+                  //       value: loadingProgress.expectedTotalBytes != null
+                  //           ? loadingProgress.cumulativeBytesLoaded /
+                  //               loadingProgress.expectedTotalBytes!
+                  //           : null,
+                  //     ),
+                  //   );
+                  // },
                 ),
               );
             },

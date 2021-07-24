@@ -46,7 +46,7 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 1,
-      height: MediaQuery.of(context).size.height * 0.35,
+      height: MediaQuery.of(context).size.height * 0.7,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,11 +66,14 @@ class _PostPageState extends State<PostPage> {
                   .format(DateTime.parse(widget.datePost))),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              widget.textPost,
-              style: TextStyle(fontSize: 20.0),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.textPost,
+                maxLines: 15,
+                style: TextStyle(fontSize: 12.0),
+              ),
             ),
           ),
           Expanded(

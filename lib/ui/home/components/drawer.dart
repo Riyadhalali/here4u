@@ -17,7 +17,7 @@ class DrawePage extends StatelessWidget {
               width: 100.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("assets/logo/logo.png"),
+                    image: AssetImage("assets/logo/logo.jpeg"),
                     fit: BoxFit.contain),
               ),
             ),
@@ -25,7 +25,7 @@ class DrawePage extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.search),
             title: Text(
-              'قسم الإسعاف',
+              'طلب الإسعاف',
             ),
             onTap: () {
               Navigator.pushNamed(context, EmergencyPage.id);

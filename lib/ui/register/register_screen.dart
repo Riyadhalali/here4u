@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
         height: MediaQuery.of(context).size.height * 0.3,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/ui/register/register.png'),
+              image: AssetImage('assets/ui/home/slide_2.jpeg'),
               fit: BoxFit.contain),
         ),
       ),
@@ -70,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(right: 55.0, left: 55.0),
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
-        color: Color(0xFF8949d8),
+        color: Colors.red,
         child: Text(
           "تسجيل",
           style: TextStyle(fontSize: 20.0, color: Colors.white),

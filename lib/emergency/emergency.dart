@@ -44,20 +44,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
     });
     print(lat);
     print(long);
-
-    // _markers.add(Marker(
-    //     markerId: MarkerId('Location'),
-    //     position: LatLng(latitudeData, longitudeData),
-    //     infoWindow: InfoWindow(title: 'Location')));
   }
-
-  // void getLocation() async {
-  //   currentLocation =
-  //       LatLng(SOURCE_LOCATION.latitude, SOURCE_LOCATION.longitude);
-  //
-  //   destinationLocation =
-  //       LatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude);
-  // }
 
 //------------------------------------------------------------------------------
   void setPolylines() async {
