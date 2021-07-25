@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:here4u/webservices/webservices.dart';
 
-const LatLng SOURCE_LOCATION = LatLng(42.7477863, -71.1699932);
-const LatLng DEST_LOCATION = LatLng(35.11274331472979, 36.75788764136045);
+const LatLng SOURCE_LOCATION =
+    LatLng(35.1367571, 36.787285); // المنطقة الصناعية - حماه
+const LatLng DEST_LOCATION =
+    LatLng(35.11274331472979, 36.75788764136045); // المشفى الوطني حماه
 
 class EmergencyPage extends StatefulWidget {
   const EmergencyPage({Key? key}) : super(key: key);
@@ -28,6 +31,15 @@ class _EmergencyPageState extends State<EmergencyPage> {
   late LatLng currentLocation;
   late LatLng destinationLocation;
 
+  //-------Get time between Source and Destination using Matrix Maps APi--------
+  void getTime() {
+    Future<String?> data = WebServices.getTimeBetweenDestinations(
+        long.toString(),
+        lat.toString(),
+        DEST_LOCATION.longitude.toString(),
+        DEST_LOCATION.latitude.toString());
+  }
+
   //-> get the location of this device
   //-----------------------------------------Get Location-----------------------
   void getLocation() async {
@@ -44,6 +56,12 @@ class _EmergencyPageState extends State<EmergencyPage> {
     });
     print(lat);
     print(long);
+//-> get the time between the locations
+    Future<String?> data = WebServices.getTimeBetweenDestinations(
+        long.toString(),
+        lat.toString(),
+        DEST_LOCATION.longitude.toString(),
+        DEST_LOCATION.latitude.toString());
   }
 
 //------------------------------------------------------------------------------
@@ -93,6 +111,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
     super.initState();
     polylinePoints = PolylinePoints();
     getLocation();
+    //getTime(); // get time
   }
 
   @override
