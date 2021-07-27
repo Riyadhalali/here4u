@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:here4u/providers/post_provider.dart';
+import 'package:here4u/services/sharedpreferences.dart';
 import 'package:here4u/ui/home/home_screen.dart';
 import 'package:here4u/ui/widgets/mywidgets.dart';
 import 'package:here4u/utils/database.dart';
@@ -24,10 +25,12 @@ class _AddPostState extends State<AddPost> {
   File? imageFile; // the question mark means it could be null
   late DB db;
   String? base64image;
-
+  late String phone_data,
+      password_data; //variables for holding shared pref data
   bool fetching = true;
   String? imageFilePath;
-
+  bool activatePost = false;
+  SharedPref sharedPref = new SharedPref();
   //-> get image from gallery
   Future getImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -42,6 +45,21 @@ class _AddPostState extends State<AddPost> {
         print(imageFilePath);
       }
     });
+  }
+
+//------------------------Get the user if admin---------------------------------
+  //-> if the user is admin then adtivate the post
+  void getUserAdmin() async {
+    phone_data = await sharedPref.LoadData("phone");
+    password_data = await sharedPref.LoadData('password');
+    if (phone_data == 'admin' ||
+        phone_data == '0966114002' && password_data == 'admin') {
+      setState(() {
+        activatePost = true;
+      });
+    } else {
+      activatePost = false;
+    }
   }
 
   //------------------------
@@ -76,6 +94,7 @@ class _AddPostState extends State<AddPost> {
     super.initState();
     // db = DB();
     // getData();
+    getUserAdmin();
   }
 
   @override
@@ -155,6 +174,15 @@ class _AddPostState extends State<AddPost> {
                   imageFilePath.toString(),
                   DateTime.now());
               print(imageFile);
+
+              if (activatePost == false) {
+                // showProcessingDialog(
+                //     'لا تمتلك الصلاحيات للنشر، عذراًً.', context);
+                MyWidgets mywidget = new MyWidgets();
+                mywidget.displaySnackMessage(
+                    'عذراً، لا تمتلك الصلاحيات للنشر', context);
+                return;
+              }
               //-> insert data to sql database
               // db.insertData(DataBaseModel(
               //     textPost: _postBodyController.text,

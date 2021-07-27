@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         ], // added support arabic RTL just for this app
 
         debugShowCheckedModeBanner: false,
-        title: 'Here 4 U',
+        title: 'SARC',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

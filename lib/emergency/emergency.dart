@@ -30,6 +30,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
   late LatLng currentLocation;
   late LatLng destinationLocation;
+  String? timeRequired;
 
   //-------Get time between Source and Destination using Matrix Maps APi--------
   void getTime() {
@@ -57,11 +58,16 @@ class _EmergencyPageState extends State<EmergencyPage> {
     print(lat);
     print(long);
 //-> get the time between the locations
-    Future<String?> data = WebServices.getTimeBetweenDestinations(
+    String? data = await WebServices.getTimeBetweenDestinations(
         long.toString(),
         lat.toString(),
         DEST_LOCATION.longitude.toString(),
         DEST_LOCATION.latitude.toString());
+    setState(() {
+      timeRequired = data.toString();
+      print('time required is:');
+      print(timeRequired);
+    });
   }
 
 //------------------------------------------------------------------------------
@@ -83,7 +89,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
         _polylines.add(Polyline(
             width: 10,
             polylineId: PolylineId('polyline'),
-            color: Colors.purple,
+            color: Colors.red,
             points: polylineCoordinates));
         setState(() {});
       });
@@ -121,25 +127,50 @@ class _EmergencyPageState extends State<EmergencyPage> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : GoogleMap(
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(lat!, long!),
-                zoom: 15.0,
-              ),
-              markers: _markers,
-              myLocationButtonEnabled: true,
-              myLocationEnabled: true,
-              polylines: _polylines,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                showPinsOnMap();
-                setPolylines();
-              },
-              //-> this function will print the location of taped location on the maps
-              onTap: (LatLng loc) {
-                print(loc);
-              },
+          : Stack(
+              alignment: Alignment.center,
+              children: [
+                GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(lat!, long!),
+                    zoom: 15.0,
+                  ),
+                  markers: _markers,
+                  myLocationButtonEnabled: true,
+                  myLocationEnabled: true,
+                  polylines: _polylines,
+                  onMapCreated: (GoogleMapController controller) {
+                    _controller.complete(controller);
+                    showPinsOnMap();
+                    setPolylines();
+                  },
+                  //-> this function will print the location of taped location on the maps
+                  onTap: (LatLng loc) {
+                    print(loc);
+                  },
+                ),
+                Positioned(
+                  bottom: 15.0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: Colors.red,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'الوقت المتوقع لوصول سيارة الإسعاف' +
+                            '\n' +
+                            timeRequired.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
     );
   }

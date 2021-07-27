@@ -4,6 +4,7 @@ import 'package:here4u/emergency/emergency.dart';
 import 'package:here4u/ui/addpost/addpost.dart';
 import 'package:here4u/ui/helperkits/helperkits.dart';
 import 'package:here4u/ui/home/components/volontaries.dart';
+import 'package:here4u/ui/widgets/mywidgets.dart';
 
 class DrawePage extends StatelessWidget {
   const DrawePage({Key? key}) : super(key: key);
@@ -63,6 +64,9 @@ class DrawePage extends StatelessWidget {
             title: Text('حول'),
             onTap: () {
               //   Navigator.pushNamed(context, Voluntaries.id);
+              MyWidgets mywidget = new MyWidgets();
+              mywidget.displaySnackMessage(
+                  'الهلال الأحمر العربي السوري', context);
             },
           ),
           ListTile(
