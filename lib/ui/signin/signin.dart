@@ -14,14 +14,10 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  late String phone_data,
-      password_data; //variables for holding shared pref data
-  late String
-      usernameData; // this variable to store data returned from getUserInfo Api
-  late String
-      userPhoneData; // this variable to store data returned from getUserInfo Api
-  late String
-      userGenderData; // this variable to store data returned from getUserInfo Api
+  late String phone_data, password_data; //variables for holding shared pref data
+  late String usernameData; // this variable to store data returned from getUserInfo Api
+  late String userPhoneData; // this variable to store data returned from getUserInfo Api
+  late String userGenderData; // this variable to store data returned from getUserInfo Api
   final _phonecontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
 
@@ -83,8 +79,7 @@ class _SignInState extends State<SignIn> {
         height: MediaQuery.of(context).size.height * 0.4,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/ui/home/slide_9.jpeg'),
-              fit: BoxFit.contain),
+              image: AssetImage('assets/ui/home/slide_9.jpeg'), fit: BoxFit.contain),
         ),
       ),
     );
@@ -170,10 +165,7 @@ class _SignInState extends State<SignIn> {
             ),
             Text(
               "تسجيل الدخول",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black38),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black38),
             ),
             SizedBox(
               height: 2.0,
@@ -194,9 +186,7 @@ class _SignInState extends State<SignIn> {
               hint_text: "كلمة المرور",
               // label_text: "password",
               controller_text: _passwordcontroller,
-              icon_widget: _isHidden
-                  ? Icon(Icons.visibility)
-                  : Icon(Icons.visibility_off),
+              icon_widget: _isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
               show_password: _isHidden,
               error_msg: validatePassword ? "يرجى تعبئة الحقل" : "",
               // error_msg:
@@ -229,13 +219,9 @@ class _SignInState extends State<SignIn> {
 //-----------------------------------Functions----------------------------------
   void signInFunction() {
     setState(() {
-      _phonecontroller.text.isEmpty
-          ? validatePhone = true
-          : validatePhone = false;
+      _phonecontroller.text.isEmpty ? validatePhone = true : validatePhone = false;
 
-      _passwordcontroller.text.isEmpty
-          ? validatePassword = true
-          : validatePassword = false;
+      _passwordcontroller.text.isEmpty ? validatePassword = true : validatePassword = false;
     });
 
     if (validatePhone || validatePassword) {
@@ -257,7 +243,7 @@ class _SignInState extends State<SignIn> {
       backgroundColor: Colors.white,
     ));
 
-    Navigator.pushNamed(context, NavigationBar.id);
+    Navigator.pushNamed(context, Navigations.id);
   }
 //------------------------------------------------------------------------------
 } // end class

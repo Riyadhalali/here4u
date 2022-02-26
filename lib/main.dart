@@ -31,9 +31,7 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate
         ],
-        supportedLocales: [
-          Locale('ar', 'ar_AR')
-        ], // added support arabic RTL just for this app
+        supportedLocales: [Locale('ar', 'ar_AR')], // added support arabic RTL just for this app
 
         debugShowCheckedModeBanner: false,
         title: 'SARC',
@@ -44,7 +42,7 @@ class MyApp extends StatelessWidget {
         routes: {
           SplashScreen.id: (context) => SplashScreen(),
           HomeScreen.id: (context) => HomeScreen(),
-          NavigationBar.id: (context) => NavigationBar(),
+          Navigations.id: (context) => Navigations(),
           SignIn.id: (context) => SignIn(),
           RegisterPage.id: (context) => RegisterPage(),
           AddPost.id: (context) => AddPost(),
