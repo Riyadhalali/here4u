@@ -4,8 +4,7 @@ class ImageBackgroundWithFilter extends StatefulWidget {
   String imageAsset;
   ImageBackgroundWithFilter({required this.imageAsset});
   @override
-  _ImageBackgroundWithFilterState createState() =>
-      _ImageBackgroundWithFilterState();
+  _ImageBackgroundWithFilterState createState() => _ImageBackgroundWithFilterState();
 }
 
 class _ImageBackgroundWithFilterState extends State<ImageBackgroundWithFilter> {
@@ -19,8 +18,7 @@ class _ImageBackgroundWithFilterState extends State<ImageBackgroundWithFilter> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(35.0),
           image: DecorationImage(
-              colorFilter: new ColorFilter.mode(
-                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
               image: AssetImage(widget.imageAsset),
               fit: BoxFit.cover),
         ),
