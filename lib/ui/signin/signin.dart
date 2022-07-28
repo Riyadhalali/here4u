@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:here4u/navigator.dart';
 import 'package:here4u/services/sharedpreferences.dart';
 import 'package:here4u/ui/register/register_screen.dart';
+import 'package:here4u/ui/widgets/mywidgets.dart';
 import 'package:here4u/ui/widgets/textinputfield.dart';
 import 'package:here4u/ui/widgets/textinputfieldwithicon.dart';
 
@@ -14,27 +17,49 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  late String phone_data, password_data; //variables for holding shared pref data
+  String? email_data, password_data, uid_data; //variables for holding shared pref data
   late String usernameData; // this variable to store data returned from getUserInfo Api
   late String userPhoneData; // this variable to store data returned from getUserInfo Api
   late String userGenderData; // this variable to store data returned from getUserInfo Api
-  final _phonecontroller = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordcontroller = TextEditingController();
 
   bool validatePhone = false;
-  bool validatePassword = false;
+  bool validateEmail = false;
   bool _isHidden = false;
+  bool emailValid = false;
 
   SharedPref sharedPref = new SharedPref();
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance; // add firebase auth
+  MyWidgets myWidgets = new MyWidgets();
+
+  String? userID;
+  String? userEmail;
+
+  var collection = FirebaseFirestore.instance.collection("users"); // to get the state of users
   //------------------------------Functions-------------------------------------
   //-> Loading User Data if he is already signed in to the program
-  Future loadUserDataLogin() async {
-    phone_data = await sharedPref.LoadData("phone");
+  void loadUserDataLogin() async {
+    email_data = await sharedPref.LoadData("email");
     password_data = await sharedPref.LoadData('password');
-    if (phone_data != null && password_data != null) {
+    uid_data = await sharedPref.LoadData("uid");
+
+    if (email_data != null || password_data != null || uid_data != null) {
       setState(() {
-        _phonecontroller.text = phone_data;
-        _passwordcontroller.text = password_data;
+        _emailController.text = email_data!;
+        _passwordcontroller.text = password_data!;
+      });
+    }
+  }
+
+  // get user data from firebase
+  void getUserFromFirebase() {
+    final User? user = firebaseAuth.currentUser;
+    if (user != null) {
+      setState(() {
+        userID = user.uid;
+        userEmail = user.email;
+        //  print("name of user is: $userEmail");
       });
     }
   }
@@ -171,11 +196,11 @@ class _SignInState extends State<SignIn> {
               height: 2.0,
             ),
             TextInputField(
-              hint_text: "رقم الهاتف",
+              hint_text: "عنوان البريد الإلكتروني",
               //label_text: "username",
-              controller_text: _phonecontroller,
+              controller_text: _emailController,
               show_password: false,
-              error_msg: validatePassword ? "يرجى تعبئة الحقل" : "",
+              error_msg: validateEmail ? "يرجى تعبئة الحقل" : "",
               FunctionToDo: () {},
             ),
             SizedBox(
@@ -188,7 +213,7 @@ class _SignInState extends State<SignIn> {
               controller_text: _passwordcontroller,
               icon_widget: _isHidden ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
               show_password: _isHidden,
-              error_msg: validatePassword ? "يرجى تعبئة الحقل" : "",
+              error_msg: validateEmail ? "يرجى تعبئة الحقل" : "",
               // error_msg:
               //     _passwordcontroller.text.isEmpty ? "يرجى تعبئة الحقل" : "",
               FunctionToDo: () {
@@ -217,33 +242,56 @@ class _SignInState extends State<SignIn> {
 
 //------------------------------------------------------------------------------
 //-----------------------------------Functions----------------------------------
-  void signInFunction() {
+  void signInFunction() async {
     setState(() {
-      _phonecontroller.text.isEmpty ? validatePhone = true : validatePhone = false;
+      _emailController.text.isEmpty ? validateEmail = true : validateEmail = false;
 
-      _passwordcontroller.text.isEmpty ? validatePassword = true : validatePassword = false;
+      _passwordcontroller.text.isEmpty ? validateEmail = true : validateEmail = false;
     });
 
-    if (validatePhone || validatePassword) {
+    if (validateEmail || validateEmail) {
+      return;
+    }
+    // to check that user has entered a valid email address
+    emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(_emailController.text);
+    if (emailValid != true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("البريد الإلكتروني غير صالح"),
+          duration: Duration(seconds: 3),
+        ),
+      );
       return;
     }
 
-    sharedPref.setData('phone', _phonecontroller.text);
-    sharedPref.setData('password', _passwordcontroller.text);
     // show a snackbar message
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        "تم تسجيل الدخول بنجاح",
-        style: TextStyle(
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      duration: Duration(seconds: 3),
-      backgroundColor: Colors.white,
-    ));
 
-    Navigator.pushNamed(context, Navigations.id);
+    myWidgets.showProcessingDialog(" جاري تسجيل الدخول ... ", context);
+
+    try {
+      UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(
+          email: _emailController.text.toLowerCase().trim(),
+          password: _passwordcontroller.text.toLowerCase().trim());
+      final user = userCredential.user;
+      // print(user?.uid);
+      if (user?.uid != null) {
+        Navigator.of(context).pop();
+        //-> save to shared preferences
+        sharedPref.setData("uid", user!.uid.toString());
+        sharedPref.setData('email', _emailController.text);
+        sharedPref.setData('password', _passwordcontroller.text);
+        Navigator.of(context).pushNamed(Navigations.id);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        myWidgets.displaySnackMessage(" لا يوجد مستخدم بهذا الاسم", context);
+      } else if (e.code == 'wrong-password') {
+        myWidgets.displaySnackMessage("كلمة السر خاطئة", context);
+      }
+
+      Navigator.of(context).pop();
+    }
   }
 //------------------------------------------------------------------------------
 } // end class

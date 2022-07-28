@@ -4,6 +4,7 @@ import 'package:here4u/emergency/emergency.dart';
 import 'package:here4u/ui/addpost/addpost.dart';
 import 'package:here4u/ui/helperkits/helperkits.dart';
 import 'package:here4u/ui/home/components/volontaries.dart';
+import 'package:here4u/ui/maps/maps_nearby_place_screen.dart';
 import 'package:here4u/ui/widgets/mywidgets.dart';
 
 class DrawePage extends StatelessWidget {
@@ -21,8 +22,7 @@ class DrawePage extends StatelessWidget {
               width: 100.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("assets/logo/logo.jpeg"),
-                    fit: BoxFit.contain),
+                    image: AssetImage("assets/logo/logo.jpeg"), fit: BoxFit.contain),
               ),
             ),
           ),
@@ -53,6 +53,42 @@ class DrawePage extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(
+              Icons.location_on,
+              color: Colors.red,
+            ),
+            title: Text(
+              'الوصول إلى أقرب مشفى',
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MapsNearByPlacesScreen(
+                            placetoSearch: "hospital",
+                            typetoSearch: "hospital",
+                          )));
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.location_on,
+              color: Colors.red,
+            ),
+            title: Text(
+              'الوصول إلى أقرب صيدلية',
+            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MapsNearByPlacesScreen(
+                            placetoSearch: "pharmacy",
+                            typetoSearch: "pharmacy",
+                          )));
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.archive_rounded),
             title: Text('باب التطوع'),
             onTap: () {
@@ -65,8 +101,7 @@ class DrawePage extends StatelessWidget {
             onTap: () {
               //   Navigator.pushNamed(context, Voluntaries.id);
               MyWidgets mywidget = new MyWidgets();
-              mywidget.displaySnackMessage(
-                  'الهلال الأحمر العربي السوري', context);
+              mywidget.displaySnackMessage('الهلال الأحمر العربي السوري', context);
             },
           ),
           ListTile(

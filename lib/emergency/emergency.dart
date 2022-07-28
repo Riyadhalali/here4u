@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:here4u/webservices/webservices.dart';
+import 'package:telephony/telephony.dart';
 
-const LatLng SOURCE_LOCATION =
-    LatLng(35.1367571, 36.787285); // المنطقة الصناعية - حماه
-const LatLng DEST_LOCATION =
-    LatLng(35.11274331472979, 36.75788764136045); // المشفى الوطني حماه
+const LatLng SOURCE_LOCATION = LatLng(35.1367571, 36.787285); // المنطقة الصناعية - حماه
+const LatLng DEST_LOCATION = LatLng(35.11274331472979, 36.75788764136045); // المشفى الوطني حماه
 
 class EmergencyPage extends StatefulWidget {
   const EmergencyPage({Key? key}) : super(key: key);
@@ -31,38 +31,31 @@ class _EmergencyPageState extends State<EmergencyPage> {
   late LatLng currentLocation;
   late LatLng destinationLocation;
   String? timeRequired;
+  final Telephony telephony = Telephony.instance;
 
   //-------Get time between Source and Destination using Matrix Maps APi--------
   void getTime() {
-    Future<String?> data = WebServices.getTimeBetweenDestinations(
-        long.toString(),
-        lat.toString(),
-        DEST_LOCATION.longitude.toString(),
-        DEST_LOCATION.latitude.toString());
+    Future<String?> data = WebServices.getTimeBetweenDestinations(long.toString(), lat.toString(),
+        DEST_LOCATION.longitude.toString(), DEST_LOCATION.latitude.toString());
   }
 
   //-> get the location of this device
   //-----------------------------------------Get Location-----------------------
   void getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     double longitudeData = position.longitude;
     double latitudeData = position.latitude;
     setState(() {
       lat = latitudeData;
       long = longitudeData;
       currentLocation = LatLng(position.latitude, position.longitude);
-      destinationLocation =
-          LatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude);
+      destinationLocation = LatLng(DEST_LOCATION.latitude, DEST_LOCATION.longitude);
     });
     print(lat);
     print(long);
 //-> get the time between the locations
-    String? data = await WebServices.getTimeBetweenDestinations(
-        long.toString(),
-        lat.toString(),
-        DEST_LOCATION.longitude.toString(),
-        DEST_LOCATION.latitude.toString());
+    String? data = await WebServices.getTimeBetweenDestinations(long.toString(), lat.toString(),
+        DEST_LOCATION.longitude.toString(), DEST_LOCATION.latitude.toString());
     setState(() {
       timeRequired = data.toString();
       print('time required is:');
@@ -75,8 +68,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         "AIzaSyA54WuN4cuPPdhHB5hW-ibaYJGF7ZB_1mE",
         PointLatLng(currentLocation.latitude, currentLocation.longitude),
-        PointLatLng(
-            destinationLocation.latitude, destinationLocation.longitude));
+        PointLatLng(destinationLocation.latitude, destinationLocation.longitude));
 
     print('error message');
     print(result.errorMessage);
@@ -111,14 +103,54 @@ class _EmergencyPageState extends State<EmergencyPage> {
     });
   }
 
+  void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents).catchError((onError) {
+      print(onError);
+    });
+    print(_result);
+  }
+
+  //---------------------------------ٍSend Message directly without user interaction---------
+  //-> also we can use something called sms manager
+  void sendSmsDirectly() async {
+    String message = "يرجى إرسال إسعاف إلى الموقع الحالي ";
+    List<String> recipents = ["0964755094"];
+    String _result = await sendSMS(message: message, recipients: recipents, sendDirect: true)
+        .catchError((onError) {
+      print("error sms:$onError");
+    });
+    print(_result);
+  }
+
+  //
+  void sendSMS_2() async {
+    bool? permissionsGranted = await telephony.requestSmsPermissions;
+    if (permissionsGranted == true) {
+      print("permissions is granted");
+
+      await telephony.sendSms(to: "0947505094", message: "يرجى إرسال إسعاف إلى الموقع الحالي ");
+    } else {
+      print("permissions is Not granted, please check");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     polylinePoints = PolylinePoints();
     getLocation();
-    //getTime(); // get time
+    getTime(); // get time
   }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    sendSMS_2();
+  }
+
+  //------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +179,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                   },
                   //-> this function will print the location of taped location on the maps
                   onTap: (LatLng loc) {
-                    print(loc);
+                    //  print(loc);
                   },
                 ),
                 Positioned(
@@ -161,9 +193,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                     ),
                     child: Center(
                       child: Text(
-                        'الوقت المتوقع لوصول سيارة الإسعاف' +
-                            '\n' +
-                            timeRequired.toString(),
+                        'الوقت المتوقع لوصول سيارة الإسعاف' + '\n' + timeRequired.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
                       ),
