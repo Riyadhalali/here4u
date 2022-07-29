@@ -108,7 +108,7 @@ class _HelperKitsState extends State<HelperKits> {
       //-> create user in firebase
       try {
         //-> first method
-        FirebaseFirestore.instance.collection('helperKits').doc().set({
+        FirebaseFirestore.instance.collection('helperKits').doc(_familyControllerID.text).set({
           'familyID': _familyControllerID.text,
           'familyMembersNumber': _familyMembersNumbersController.text,
           'familyLocation': _familyLocationController.text,

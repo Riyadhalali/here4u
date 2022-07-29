@@ -124,7 +124,8 @@ class _VoluntariesState extends State<Voluntaries> {
 
     //-> create user in firebase
     try {
-      final volunteers = FirebaseFirestore.instance.collection('volunteers').doc();
+      final volunteers =
+          FirebaseFirestore.instance.collection('volunteers').doc(_nameController.text);
 
       final volunteries = VoluntariesModel(
           name: _nameController.text,

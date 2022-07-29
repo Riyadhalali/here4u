@@ -1,9 +1,13 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:here4u/ui/provider/permission_provider.dart';
 import 'package:here4u/ui/signin/signin.dart';
 import 'package:here4u/ui/widgets/imagebackground.dart';
 import 'package:here4u/ui/widgets/imagebackgroundwothfilter.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splash_screen';
@@ -13,6 +17,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  var collection = FirebaseFirestore.instance.collection("users"); // to get the state of users
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance; // add firebase auth
   Future<Timer> LoadTimer() async {
     return new Timer(Duration(seconds: 3), onDoneLoading);
   }
@@ -21,11 +27,27 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushNamed(context, SignIn.id);
   }
 
+  fetchUser() async {
+    PermissionsProvider permissionsProvider =
+        Provider.of<PermissionsProvider>(context, listen: false);
+
+    var docSnapshot = await collection.doc("admin").get();
+    print("the docSnapshot${docSnapshot.data()}");
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      if (data!['userType'] == "admin") {
+        permissionsProvider.showInDrawerDoctorAddPost(true);
+        print("the provider value is ${permissionsProvider.adminSigned}");
+      }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     LoadTimer();
+    fetchUser();
   }
 
   @override
@@ -46,8 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Stack(
             children: [
               ImageBackground(imageAsset: 'assets/logo/logo.jpeg'),
-              ImageBackgroundWithFilter(
-                  imageAsset: 'assets/ui/splash/people.jpg'),
+              ImageBackgroundWithFilter(imageAsset: 'assets/ui/splash/people.jpg'),
             ],
           ),
         ),

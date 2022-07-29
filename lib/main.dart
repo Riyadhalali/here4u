@@ -5,9 +5,12 @@ import 'package:here4u/emergency/emergency.dart';
 import 'package:here4u/navigator.dart';
 import 'package:here4u/providers/post_provider.dart';
 import 'package:here4u/ui/addpost/addpost.dart';
+import 'package:here4u/ui/adminControl_screen/adminControlHelperKita_screen.dart';
+import 'package:here4u/ui/adminControl_screen/adminControlVolunteers_screen.dart';
 import 'package:here4u/ui/helperkits/helperkits.dart';
 import 'package:here4u/ui/home/components/volontaries.dart';
 import 'package:here4u/ui/home/home_screen.dart';
+import 'package:here4u/ui/provider/permission_provider.dart';
 import 'package:here4u/ui/register/register_screen.dart';
 import 'package:here4u/ui/signin/signin.dart';
 import 'package:here4u/ui/splash/splash_screen.dart';
@@ -27,6 +30,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PostProvider()),
+        ChangeNotifierProvider(
+          create: (_) => PermissionsProvider(),
+        )
       ],
       child: MaterialApp(
         localizationsDelegates: [
@@ -52,6 +58,8 @@ class MyApp extends StatelessWidget {
           EmergencyPage.id: (context) => EmergencyPage(),
           HelperKits.id: (context) => HelperKits(),
           Voluntaries.id: (context) => Voluntaries(),
+          AdminControlHelperKitsScreen.id: (context) => AdminControlHelperKitsScreen(),
+          AdminControlVolunteersScreen.id: (context) => AdminControlVolunteersScreen(),
         },
       ),
     );

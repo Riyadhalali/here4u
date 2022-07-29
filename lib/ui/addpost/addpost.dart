@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:here4u/models/database_model.dart';
 import 'package:here4u/providers/post_provider.dart';
 import 'package:here4u/services/sharedpreferences.dart';
 import 'package:here4u/ui/home/home_screen.dart';
@@ -25,8 +26,7 @@ class _AddPostState extends State<AddPost> {
   File? imageFile; // the question mark means it could be null
   late DB db;
   String? base64image;
-  late String phone_data,
-      password_data; //variables for holding shared pref data
+  late String phone_data, password_data; //variables for holding shared pref data
   bool fetching = true;
   String? imageFilePath;
   bool activatePost = false;
@@ -52,8 +52,7 @@ class _AddPostState extends State<AddPost> {
   void getUserAdmin() async {
     phone_data = await sharedPref.LoadData("phone");
     password_data = await sharedPref.LoadData('password');
-    if (phone_data == 'admin' ||
-        phone_data == '0966114002' && password_data == 'admin') {
+    if (phone_data == 'admin' || phone_data == '0966114002' && password_data == 'admin') {
       setState(() {
         activatePost = true;
       });
@@ -69,8 +68,7 @@ class _AddPostState extends State<AddPost> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
             contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
             content: Container(
               child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -78,9 +76,7 @@ class _AddPostState extends State<AddPost> {
                 SizedBox(
                   width: 5.0,
                 ),
-                Text(text,
-                    style: TextStyle(
-                        fontFamily: "OpenSans", color: Color(0xFF5B6978)))
+                Text(text, style: TextStyle(fontFamily: "OpenSans", color: Color(0xFF5B6978)))
               ]),
             ),
           );
@@ -142,8 +138,7 @@ class _AddPostState extends State<AddPost> {
         Divider(
           thickness: 2.0,
         ),
-        ElevatedButton(
-            onPressed: getImage, child: Text('اختيار صورة من المعرض')),
+        ElevatedButton(onPressed: getImage, child: Text('اختيار صورة من المعرض')),
         SizedBox(
           height: 10,
         ),
@@ -168,26 +163,22 @@ class _AddPostState extends State<AddPost> {
         ElevatedButton(
           onPressed: () async {
             if (_postBodyController.text.isNotEmpty && imageFile != null) {
-              postProvider.addPost(
-                  postProvider.items.length + 1,
-                  _postBodyController.text,
-                  imageFilePath.toString(),
-                  DateTime.now());
+              postProvider.addPost(postProvider.items.length + 1, _postBodyController.text,
+                  imageFilePath.toString(), DateTime.now());
               print(imageFile);
 
               if (activatePost == false) {
                 // showProcessingDialog(
                 //     'لا تمتلك الصلاحيات للنشر، عذراًً.', context);
                 MyWidgets mywidget = new MyWidgets();
-                mywidget.displaySnackMessage(
-                    'عذراً، لا تمتلك الصلاحيات للنشر', context);
+                mywidget.displaySnackMessage('عذراً، لا تمتلك الصلاحيات للنشر', context);
                 return;
               }
               //-> insert data to sql database
-              // db.insertData(DataBaseModel(
-              //     textPost: _postBodyController.text,
-              //     date: DateTime.now().toString(),
-              //     imagePath: imageFile.toString()));
+              db.insertData(DataBaseModel(
+                  textPost: _postBodyController.text,
+                  date: DateTime.now().toString(),
+                  imagePath: imageFile.toString()));
 
               //load timer for 3 seconds when it is done please go to screen
               Timer timer = Timer(Duration(seconds: 3), () {

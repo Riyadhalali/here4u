@@ -11,15 +11,15 @@ class HelperKitsModel {
       required this.phoneNumber});
 
   Map<String, dynamic> toJson() => {
-        'familyId': familyId,
+        'familyID': familyId,
         'familyMembersNumber': familyMembersNumber,
         'familyLocation': familyLocation,
-        'phoneNumber': phoneNumber
+        'phone_number': phoneNumber
       };
 
   static HelperKitsModel fromJson(Map<String, dynamic> json) => HelperKitsModel(
-      familyId: json['familyId'],
+      familyId: json['familyID'],
       familyMembersNumber: json['familyMembersNumber'],
       familyLocation: json['familyLocation'],
-      phoneNumber: json['phoneNumber']);
+      phoneNumber: json['phone_number']);
 } // end class
