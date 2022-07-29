@@ -1,8 +1,8 @@
-import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:here4u/models/volontaries_model.dart';
+import 'package:here4u/navigator.dart';
 import 'package:here4u/ui/home/components/drawer.dart';
-import 'package:here4u/ui/home/home_screen.dart';
 import 'package:here4u/ui/widgets/mywidgets.dart';
 import 'package:here4u/ui/widgets/textinputfield.dart';
 
@@ -13,20 +13,19 @@ class Voluntaries extends StatefulWidget {
 }
 
 class _VoluntariesState extends State<Voluntaries> {
-  final _bookController = TextEditingController();
-  final _familyMembersController = TextEditingController();
-  final _familyMembersNumbersController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _skillsController = TextEditingController();
   final _departmentController = TextEditingController();
 
-  bool validateBook = false;
-  bool validatefamilyMembers = false;
-  bool validatefamilyMembersNumbers = false;
-  bool validatephoneController = false;
-  bool validatedepartmentController = false;
+  bool nameBook = false;
+  bool validatePhoneNumber = false;
+  bool validateEmail = false;
+  bool validateSkills = false;
+  bool validateSection = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -54,33 +53,32 @@ class _VoluntariesState extends State<Voluntaries> {
             ),
             TextInputField(
                 hint_text: 'الاسم',
-                controller_text: _bookController,
-                error_msg: validateBook ? "يرجى تعبئة الحقل" : null,
+                controller_text: _nameController,
+                error_msg: nameBook ? "يرجى تعبئة الحقل" : null,
                 show_password: false),
             SizedBox(
               height: 30,
             ),
             TextInputField(
                 hint_text: 'رقم الهاتف',
-                controller_text: _familyMembersController,
-                error_msg: validatefamilyMembers ? "يرجى تعبئة الحقل" : null,
+                controller_text: _phoneNumberController,
+                error_msg: validatePhoneNumber ? "يرجى تعبئة الحقل" : null,
                 show_password: false),
             SizedBox(
               height: 30,
             ),
             TextInputField(
                 hint_text: 'البريد الإلكتروني',
-                controller_text: _familyMembersNumbersController,
-                error_msg:
-                    validatefamilyMembersNumbers ? "يرجى تعبئة الحقل" : null,
+                controller_text: _emailController,
+                error_msg: validateEmail ? "يرجى تعبئة الحقل" : null,
                 show_password: false),
             SizedBox(
               height: 30,
             ),
             TextInputField(
                 hint_text: 'المهارات',
-                controller_text: _phoneController,
-                error_msg: validatephoneController ? "يرجى تعبئة الحقل" : null,
+                controller_text: _skillsController,
+                error_msg: validateSkills ? "يرجى تعبئة الحقل" : null,
                 show_password: false),
             SizedBox(
               height: 30,
@@ -88,8 +86,7 @@ class _VoluntariesState extends State<Voluntaries> {
             TextInputField(
                 hint_text: 'القسم المراد التطوع فيه',
                 controller_text: _departmentController,
-                error_msg:
-                    validatedepartmentController ? "يرجى تعبئة الحقل" : null,
+                error_msg: validateSection ? "يرجى تعبئة الحقل" : null,
                 show_password: false),
             SizedBox(
               height: 30,
@@ -106,33 +103,56 @@ class _VoluntariesState extends State<Voluntaries> {
   }
 
   //-----------------------------------Register Function------------------------
-  void regiserFunction() {
-    if (_phoneController.text.isEmpty ||
-        _bookController.text.isEmpty ||
-        _familyMembersController.text.isEmpty ||
-        _familyMembersNumbersController.text.isEmpty ||
+  void regiserFunction() async {
+    if (_skillsController.text.isEmpty ||
+        _nameController.text.isEmpty ||
+        _phoneNumberController.text.isEmpty ||
+        _emailController.text.isEmpty ||
         _departmentController.text.isEmpty) {
       setState(() {
-        validateBook = true;
-        validatefamilyMembersNumbers = true;
-        validatefamilyMembers = true;
-        validatephoneController = true;
-        validatephoneController = true;
+        nameBook = true;
+        validateEmail = true;
+        validatePhoneNumber = true;
+        validateSkills = true;
+        validateSkills = true;
       });
 
       return;
-    } else {
-      MyWidgets myWidgets = MyWidgets();
-      myWidgets.showProcessingDialog("جاري التسجيل", context);
-      Future.delayed(Duration(milliseconds: 2000), () {
-        myWidgets.showProcessingDialog("تم التسجيل بنجاح...", context);
-      });
-      Timer timer = Timer(Duration(seconds: 4), onDoneLoading);
     }
-  }
+    MyWidgets myWidgets = MyWidgets();
+    myWidgets.showProcessingDialog("جاري التسجيل", context);
 
-  //-----------------------------OnDoneLoading----------------------------------
-  void onDoneLoading() {
-    Navigator.pushNamed(context, HomeScreen.id);
+    //-> create user in firebase
+    try {
+      final volunteers = FirebaseFirestore.instance.collection('volunteers').doc();
+
+      final volunteries = VoluntariesModel(
+          name: _nameController.text,
+          phoneNumber: _phoneNumberController.text,
+          email: _emailController.text,
+          skills: _skillsController.text,
+          section: _departmentController.text);
+      final json = volunteries.toJson();
+
+      await volunteers.set(json);
+      //-> Display snackbar message
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("تم التسجيل بنجاح"),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      Navigator.pushNamed(context, Navigations.id);
+    } on FirebaseException catch (e) {
+      //-> Display snackbar message with error
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message.toString()),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
   }
 } //------------------------End class-------------------------------------------
