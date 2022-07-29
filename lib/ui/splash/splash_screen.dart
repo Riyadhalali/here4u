@@ -39,6 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
         permissionsProvider.showInDrawerDoctorAddPost(true);
         print("the provider value is ${permissionsProvider.adminSigned}");
       }
+      if (data!['userType'] == "موظف") {
+        permissionsProvider.showInDrawerEmployeeAddPost(true);
+        print("the provider value is ${permissionsProvider.EmployeeSigned}");
+      }
     }
   }
 

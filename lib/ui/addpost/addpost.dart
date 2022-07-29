@@ -11,6 +11,8 @@ import 'package:here4u/utils/database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/permission_provider.dart';
+
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
   static const id = 'addpost_page';
@@ -109,6 +111,8 @@ class _AddPostState extends State<AddPost> {
   Widget columnElements(BuildContext context) {
     final postProvider = Provider.of<PostProvider>(context);
     // final postModel = Provider.of<PostModel>(context);
+    PermissionsProvider permissionsProvider =
+        Provider.of<PermissionsProvider>(context, listen: false);
     return Column(
       children: [
         Container(
@@ -167,13 +171,15 @@ class _AddPostState extends State<AddPost> {
                   imageFilePath.toString(), DateTime.now());
               print(imageFile);
 
-              if (activatePost == false) {
+              if (permissionsProvider.EmployeeSigned == false ||
+                  permissionsProvider.adminSigned == false) {
                 // showProcessingDialog(
                 //     'لا تمتلك الصلاحيات للنشر، عذراًً.', context);
                 MyWidgets mywidget = new MyWidgets();
                 mywidget.displaySnackMessage('عذراً، لا تمتلك الصلاحيات للنشر', context);
                 return;
               }
+
               //-> insert data to sql database
               db.insertData(DataBaseModel(
                   textPost: _postBodyController.text,
